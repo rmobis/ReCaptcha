@@ -22,9 +22,12 @@ class RecaptchaServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->package('neutron/recaptcha');
+		// We have to explicitly pass the path here, because Laravel can't
+		// figure it out correctly. We could place `config` and `views` folder
+		// inside Neutron/ReCaptcha/Laravel, but that would force the users
+		// installing the package to explicitly set the configuration files.
+		$this->package('neutron/recaptcha', null, realpath(__DIR__ . '/../../..'));
 
-		$this->registerReCaptcha();
 		$this->registerFormMacro();
 		$this->registerValidator();
 	}
@@ -34,7 +37,10 @@ class RecaptchaServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function register() { }
+	public function register()
+	{
+		$this->registerReCaptcha();
+	}
 
 	/**
      * Register the Recaptcha Facade
