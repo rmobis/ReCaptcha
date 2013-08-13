@@ -2,14 +2,19 @@
 
 namespace Neutron\ReCaptcha\Laravel;
 
-use Facade as ReCaptcha;
+use Neutron\ReCaptcha\Laravel\ReCaptchaFacade as ReCaptcha;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class RecaptchaValidator extends Validator
+class ReCaptchaValidator extends Validator
 {
 
+    /**
+     * The Symfony Request object, used to get the client's IP
+     *
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
     protected $request;
 
     /**
@@ -37,8 +42,15 @@ class RecaptchaValidator extends Validator
      * @param  mixed   $parameters
      * @return bool
      */
-    public function validateRecaptcha($attribute, $value, $parameters = array())
+    protected function validateRecaptcha($attribute, $value, $parameters = array())
     {
+        // We first run the required rule, this way we can maybe save some
+        // unnecessary requests and not run the risk of validating a blank
+        // response.
+        if (! $this->validateRequired($attribute, $value)) {
+            return false;
+        }
+
         $challenge = reset($parameters) ?: 'recaptcha_challenge_field';
         $response = ReCaptcha::checkAnswer($this->request->getClientIp(), $this->data[$challenge], $value);
 

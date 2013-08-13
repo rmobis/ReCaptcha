@@ -5,7 +5,7 @@ namespace Neutron\ReCaptcha\Laravel;
 use Neutron\ReCaptcha\ReCaptcha;
 use Illuminate\Support\ServiceProvider;
 
-class RecaptchaServiceProvider extends ServiceProvider
+class ReCaptchaServiceProvider extends ServiceProvider
 {
 
 	/**
@@ -91,7 +91,7 @@ class RecaptchaServiceProvider extends ServiceProvider
 		$request = $this->app['request'];
 
 		$validator->resolver(function ($translator, $data, $rules, $messages) use ($request) {
-			return new Validator($request, $translator, $data, $rules, $messages);
+			return new ReCaptchaValidator($request, $translator, $data, $rules, $messages);
 		});
 	}
 

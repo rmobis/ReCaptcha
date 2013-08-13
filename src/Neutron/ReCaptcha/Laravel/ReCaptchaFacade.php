@@ -2,9 +2,9 @@
 
 namespace Neutron\ReCaptcha\Laravel;
 
-use Illuminate\Support\Facades\Facade as IlluminateFacade;
+use Illuminate\Support\Facades\Facade;
 
-class Facade extends IlluminateFacade
+class ReCaptchaFacade extends Facade
 {
 
     /**
